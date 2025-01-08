@@ -1,0 +1,120 @@
+PROGRAM Algopresentasi
+
+DECLARE ArrayList namaP
+DECLARE ArrayList nmrP
+DECLARE ArrayList alamatP
+DECLARE ArrayList Motor
+DECLARE ArrayList harga
+DECLARE ArrayList cicilan
+DECLARE ArrayList tenor
+DECLARE ArrayList uangmuka
+DECLARE boolean isRunning = true
+DECLARE BufferedReader input
+
+FUNCTION showMenu()
+    PRINT "============ MENU ============"
+    PRINT "1. Isi Data"
+    PRINT "2. Lihat Laporan"
+    PRINT "3. Koreksi / Edit Data"
+    PRINT "4. Hapus Data"
+    PRINT "5. Keluar"
+    PRINT "PILIH MENU > "
+    DECLARE Menu = READ integer from input
+
+    SWITCH Menu
+        CASE 1: CALL insert()
+        CASE 2: CALL laporan()
+        CASE 3: CALL editData()
+        CASE 4: CALL deleteData()
+        CASE 5: isRunning = false
+                 PRINT "Program Selesai."
+        DEFAULT: PRINT "Pilihan tidak valid."
+
+FUNCTION alldata()
+    PRINT "========= SEMUA DATA ========="
+    IF namaP is empty THEN
+        PRINT "Belum ada data."
+    ELSE
+        FOR i FROM 0 TO SIZE(namaP) - 1
+            PRINT formatted data from namaP, alamatP, nmrP, Motor, harga, uangmuka
+
+FUNCTION laporan()
+    PRINT "===== LAPORAN LEASING MOTOR ====="
+    IF namaP is empty THEN
+        PRINT "Belum ada data."
+    ELSE
+        CALCULATE totalData, dataPerHalaman, totalHalaman
+        FOR halaman FROM 0 TO totalHalaman - 1
+            PRINT header for laporan
+            FOR i FROM halaman * dataPerHalaman TO MIN((halaman + 1) * dataPerHalaman, totalData) - 1
+                CALCULATE bunga, totaltenor
+                PRINT formatted data for each entry
+            PRINT subtotal for the current page
+            IF halaman < totalHalaman - 1 THEN
+                WAIT for user input to continue
+
+FUNCTION insert()
+    DECLARE ulang = true
+    WHILE ulang
+        PRINT "======== INPUT DATA ========"
+        PROMPT user for nama, alamat, nmr
+        PRINT motor options
+        PROMPT user for kode
+        SET motor = Motor(kode)
+        SET tunai = harga(kode)
+        PRINT motor details
+        PROMPT user for muka
+        IF muka >= tunai THEN
+            PRINT error message
+            CONTINUE
+        PROMPT user for tenorP
+        SET cicil = tenor(kode, tenorP, muka)
+        PRINT cicilan details
+        STORE data in ArrayLists
+        PROMPT user to add more data
+        IF user choice is not 'y' THEN
+            ulang = false
+
+FUNCTION editData()
+    DECLARE ulang = true
+    WHILE ulang
+        CALL alldata()
+        PROMPT user for index to edit
+        IF index is valid THEN
+            PROMPT user for new data
+            UPDATE ArrayLists with new data
+            PRINT success message
+        ELSE
+            PRINT "Data tidak ditemukan."
+        PROMPT user to edit more data
+        IF user choice is not 'y' THEN
+            ulang = false
+
+FUNCTION deleteData()
+    DECLARE ulang = true
+    WHILE ulang
+        CALL alldata()
+        PROMPT user for index to delete
+        IF index is valid THEN
+            REMOVE data from ArrayLists
+            PRINT success message
+        ELSE
+            PRINT "Data tidak ditemukan."
+        PROMPT user to delete more data
+        IF user choice is not 'y' THEN
+            ulang = false
+
+FUNCTION harga(kode)
+    RETURN price based on kode
+
+FUNCTION tenor(kode, tenorP, muka)
+    CALCULATE cicilan based on inputs
+    RETURN cicilan
+
+FUNCTION Motor(kode)
+    RETURN motor name based on kode
+
+FUNCTION main()
+    PRINT program header
+    WHILE isRunning
+        CALL showMenu()
